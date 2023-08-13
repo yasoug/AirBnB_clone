@@ -4,6 +4,12 @@ File Storage
 '''
 import json
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class FileStorage:
@@ -13,6 +19,9 @@ class FileStorage:
 
     __file_path = 'file.json'
     __objects = {}
+    class_dict = {"BaseModel": BaseModel, "User": User, "Place": Place,
+                  "Amenity": Amenity, "City": City, "Review": Review,
+                  "State": State}
 
     def all(self):
         '''
@@ -24,7 +33,7 @@ class FileStorage:
         '''
         Add new obj to existing dictionary of instances
         '''
-        key = f"{obj.__class__.__name__}.{obj.id}"
+        key = f"{str(obj.__class__.__name__)}.{str(obj.id)}"
         self.__objects[key] = obj
 
     def save(self):
@@ -47,6 +56,6 @@ class FileStorage:
                 new_obj = json.load(f)
             for key, value in new_obj.items():
                 name = value['__class__']
-                self.__objects[key] = eval(name)(**value)
+                self.__objects[key] = self.class_dict[name](**value)
         except FileNotFoundError:
             pass
