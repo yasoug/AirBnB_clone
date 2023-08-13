@@ -1,0 +1,5 @@
+# Tmp files
+*~
+
+# Pycache files
+*__pycache__*
